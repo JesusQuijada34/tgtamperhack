@@ -5,7 +5,7 @@ import string
 import requests
 from bs4 import BeautifulSoup
 from telegram import Bot, Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
 
 # Función para generar un token de bot de Telegram
 def generate_bot_token():
