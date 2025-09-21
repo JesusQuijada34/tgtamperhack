@@ -192,7 +192,7 @@
 
     // Ofuscar la clave AES (dividida en partes)
     const keyParts = [
-      'miclave', 'ultrasecreta', '123', 'ABCD', 'EFGH'
+      'Jesus', 'Quijada', '34'
     ];
     const AES_KEY = keyParts[0] + keyParts[1] + keyParts[2];
 
@@ -247,10 +247,10 @@
           if (btoa(String.fromCharCode(...new Uint8Array(hash))) === storedHash) {
             return JSON.parse(cachedCredentials);
           } else {
-            console.warn('Hash de credenciales no coincide, recargando...');
+            console.warn('MedievalAIO no coincide, recargando...');
           }
         } catch (e) {
-          console.warn('Credenciales en caché corruptas, recargando...');
+          console.warn('Caché corrupto, recargando...');
         }
       }
 
