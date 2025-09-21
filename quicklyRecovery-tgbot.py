@@ -3,10 +3,17 @@ from telegram.ext import (
     ApplicationBuilder, CommandHandler, ContextTypes,
     ChatMemberHandler
 )
+from secure_loader import get_telegram_token, get_admin_id, validate_environment
 
-# Configuración
-TOKEN = "7599405971:AAGwtBTydguBTKssHOaPnCYsb5IKFvfrngo"
-ADMIN_ID = 7736662759  # Tu ID
+# Validar y cargar tokens de forma segura
+if not validate_environment():
+    print("❌ Error: No se pudieron cargar los tokens requeridos.")
+    print("💡 Ejecuta: python setup_tokens.py")
+    exit(1)
+
+# Cargar configuración de forma segura
+TOKEN = get_telegram_token()
+ADMIN_ID = get_admin_id()
 
 def build_info(update: Update) -> str:
     chat = update.effective_chat

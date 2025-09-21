@@ -144,7 +144,21 @@ def attempt_login(target, bot):
 
 # Función principal
 def main():
-    bot_token = generate_bot_token()
+    from secure_loader import get_telegram_token, validate_environment
+    
+    # Validar entorno y cargar token de forma segura
+    if not validate_environment():
+        print("❌ Error: No se pudieron cargar los tokens requeridos.")
+        print("💡 Ejecuta: python setup_tokens.py")
+        return
+    
+    # Usar token seguro en lugar de generar uno aleatorio
+    bot_token = get_telegram_token()
+    if not bot_token or bot_token == "TU_TOKEN":
+        print("❌ Error: Token de bot no configurado correctamente.")
+        print("💡 Ejecuta: python setup_tokens.py")
+        return
+        
     bot = Bot(token=bot_token)
 
     print("Ingresa los datos para penetrar en las cuentas de Telegram:")
